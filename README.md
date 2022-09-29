@@ -8,30 +8,37 @@ $ yarn install
 
 ## Development
 
-Start development server:
+Start the development server:
 
 ```
 $ PORT=8081 REACT_APP_DHIS2_BASE_URL="http://localhost:8080" yarn start
 ```
 
-Linting:
+Now in your browser, go to `http://localhost:8081`.
 
-```
-$ yarn lint
-```
+Notes:
+
+-   Requests to DHIS2 will be transparently proxied (see `src/setupProxy.js`) from `http://localhost:8081/dhis2/path` to `http://localhost:8080/path` to avoid CORS and cross-domain problems.
+
+-   The optional environment variable `REACT_APP_DHIS2_AUTH=USERNAME:PASSWORD` forces some credentials to be used by the proxy. This variable is usually not set, so the app has the same user logged in at `REACT_APP_DHIS2_BASE_URL`.
+
+-   Create a file `.env.local` (copy it from `.env`) to customize environment variables so you can simply run `yarn start`.
+
+-   [why-did-you-render](https://github.com/welldone-software/why-did-you-render) is installed, but it does not work when using standard react scripts (`yarn start`). Instead, use `yarn craco-start` to debug re-renders with WDYR. Note that hot reloading does not work out-of-the-box with [craco](https://github.com/gsoft-inc/craco).
 
 ## Tests
 
-Run unit tests:
+### Unit tests
 
 ```
 $ yarn test
 ```
 
-Run integration tests locally:
+### Integration tests (Cypress)
+
+Create the required users for testing (`cypress/support/App.ts`) in your instance and run:
 
 ```
-$ export CYPRESS_DHIS2_AUTH='admin:district'
 $ export CYPRESS_EXTERNAL_API="http://localhost:8080"
 $ export CYPRESS_ROOT_URL=http://localhost:8081
 
@@ -42,13 +49,10 @@ $ yarn cy:e2e:run
 $ yarn cy:e2e:open
 ```
 
-For this to work in Travis, you will have to create an environment variable `CYPRESS_DHIS2_AUTH`
-(Settings -> Environment Variables) with the `user:password` used in your testing DHIS2 instance.
-
 ## Build app ZIP
 
 ```
-$ yarn build-webapp
+$ yarn build
 ```
 
 ## Some development tips
@@ -69,15 +73,9 @@ $ yarn build-webapp
 ### i18n
 
 ```
-$ yarn update-po
-# ... add/edit translations in i18n/*.po files ...
 $ yarn localize
 ```
 
 ### App context
 
 The file `src/contexts/app-context.ts` holds some general context so typical infrastructure objects (`api`, `d2`, ...) are readily available. Add your own global objects if necessary.
-
-### Scripts
-
-Check the example script, entry `"script-example"`in `package.json`->scripts and `src/scripts/example.ts`.

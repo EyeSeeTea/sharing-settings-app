@@ -1,7 +1,5 @@
-import { AppConfig } from "./webapp/components/app/AppConfig";
-
 export const appConfig: AppConfig = {
-    appKey: "dhis2-app-skeleton",
+    appKey: "sharing-settings-app",
     appearance: {
         showShareButton: true,
     },
@@ -10,7 +8,7 @@ export const appConfig: AppConfig = {
         createIssue: true,
         sendToDhis2UserGroups: ["Administrators"],
         issues: {
-            repository: "EyeSeeTea/dhis2-app-skeleton",
+            repository: "EyeSeeTea/sharing-settings-app",
             title: "[User feedback] {title}",
             body: "## dhis2\n\nUsername: {username}\n\n{body}",
         },
@@ -21,3 +19,25 @@ export const appConfig: AppConfig = {
         feedbackOptions: {},
     },
 };
+
+export interface AppConfig {
+    appKey: string;
+    appearance: {
+        showShareButton: boolean;
+    };
+    feedback?: {
+        token: string[];
+        createIssue: boolean;
+        sendToDhis2UserGroups: string[];
+        issues: {
+            repository: string;
+            title: string;
+            body: string;
+        };
+        snapshots: {
+            repository: string;
+            branch: string;
+        };
+        feedbackOptions: object;
+    };
+}

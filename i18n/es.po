@@ -1,21 +1,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: i18next-conv\n"
-"POT-Creation-Date: 2020-11-11T10:10:17.826Z\n"
+"POT-Creation-Date: 2021-09-08T09:56:59.289Z\n"
 "PO-Revision-Date: 2018-10-25T09:02:35.143Z\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-msgid "Back"
-msgstr "Volver"
+msgid "Unknown model"
+msgstr ""
 
-msgid "Help"
-msgstr "Ayuda"
-
-msgid "Click to show feedback"
-msgstr "Toca para ver feedback"
+msgid "Metadata"
+msgstr ""
 
 msgid "Add"
 msgstr "Añadir"
@@ -23,5 +20,143 @@ msgstr "Añadir"
 msgid "List"
 msgstr "Listar"
 
-#~ msgid "configuration"
-#~ msgstr "Configuración"
+msgid "<No value>"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Created"
+msgstr ""
+
+msgid "Updated"
+msgstr ""
+
+msgid "Deleted"
+msgstr ""
+
+msgid "Ignored"
+msgstr ""
+
+msgid "Total"
+msgstr ""
+
+msgid "Identifier"
+msgstr ""
+
+msgid "Message"
+msgstr ""
+
+msgid "Import Results"
+msgstr ""
+
+msgid "Ok"
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Summary"
+msgstr ""
+
+msgid "Messages"
+msgstr ""
+
+msgid "JSON Response"
+msgstr ""
+
+msgid "Back"
+msgstr "Volver"
+
+msgid "Help"
+msgstr "Ayuda"
+
+msgid "Cancel sharing action?"
+msgstr ""
+
+msgid "All your changes will be lost. Are you sure you want to proceed?"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "Bulk apply"
+msgstr ""
+
+msgid "Select Metadata"
+msgstr ""
+
+msgid "List Dependencies and Exclude"
+msgstr ""
+
+msgid "Sharing Access"
+msgstr ""
+
+msgid "Summary and Apply Metadata"
+msgstr ""
+
+msgid "Replace"
+msgstr ""
+
+msgid "Merge"
+msgstr ""
+
+msgid "Update strategy"
+msgstr ""
+
+msgid "Global sharing settings"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "ID"
+msgstr ""
+
+msgid "Metadata Type"
+msgstr ""
+
+msgid "Public Access"
+msgstr ""
+
+msgid "Users"
+msgstr ""
+
+msgid "User Groups"
+msgstr ""
+
+msgid "Exclude dependency"
+msgstr ""
+
+msgid "Include dependency"
+msgstr ""
+
+msgid "Metadata type"
+msgstr ""
+
+msgid "Search by name"
+msgstr ""
+
+msgid "Data Sets"
+msgstr ""
+
+msgid "Dashboards"
+msgstr ""
+
+msgid "Programs"
+msgstr ""
+
+msgid "Apply update"
+msgstr ""
+
+msgid "Edit sharing settings to data sets, programs and dashboards."
+msgstr ""
+
+msgid "Settings"
+msgstr ""

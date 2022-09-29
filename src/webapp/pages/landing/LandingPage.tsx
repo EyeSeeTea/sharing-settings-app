@@ -1,48 +1,34 @@
+import i18n from "@eyeseetea/d2-ui-components/locales";
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { Landing } from "./Landing";
-import { MenuCardProps } from "./MenuCard";
+import { Card, CardGrid } from "../../components/card-grid/CardGrid";
 
-const LandingPage: React.FC = () => {
+export const LandingPage: React.FC = () => {
     const history = useHistory();
 
-    const cards: {
-        title: string;
-        key: string;
-        isVisible?: boolean;
-        children: MenuCardProps[];
-    }[] = [
+    const cards: Card[] = [
         {
-            title: "Section",
+            title: "Sharing settings management",
             key: "main",
             children: [
                 {
-                    name: "With List",
-                    description: "This entry has only a list action.",
-                    listAction: () => history.push("/for/John"),
-                },
-                {
-                    name: "List/add",
-                    description: "This action has list and add icons",
-                    addAction: () => history.push("/for"),
-                    listAction: () => history.push("/for/Mary"),
+                    name: i18n.t("Apply update"),
+                    description: i18n.t("Edit sharing settings to data sets, programs and dashboards."),
+                    listAction: () => history.push("/apply"),
                 },
             ],
         },
         {
-            title: "Configuration",
-            key: "configuration",
+            title: "Settings",
+            key: "settings",
             children: [
                 {
-                    name: "Stub configuration",
-                    description: "Configuration",
-                    listAction: () => history.push("/for/Configuration"),
+                    name: i18n.t("Settings"),
+                    listAction: () => history.push("/settings"),
                 },
             ],
         },
     ];
 
-    return <Landing cards={cards} />;
+    return <CardGrid cards={cards} />;
 };
-
-export default LandingPage;
