@@ -3,6 +3,10 @@
 Sharing Settings App is a DHIS2 Web Application part of [EyeSeeTea's DHIS2 Suite](https://eyeseetea.com/dhis2-apps/) that provides a quick and bulk modification of sharing settings for datasets, programs and dashboards
 
 
+[![banner_toedit](https://github.com/EyeSeeTea/sharing-settings-app/blob/gh-pages/img/sharing_settings_banner.png)](https://eyeseetea.github.io/sharing-settings-app/)
+
+
+
 ## Documentation
 
 You can find a user guide [at the wiki](https://github.com/EyeSeeTea/sharing-settings-app/wiki) You can download Sharing Settings from the [DHIS2 App Hub](https://apps.dhis2.org/user/app/4045330c-5e97-4abb-ae0a-84d14d1a39b5)
