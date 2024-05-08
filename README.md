@@ -1,3 +1,25 @@
+ <img height="120" src="https://github.com/EyeSeeTea/sharing-settings-app/blob/gh-pages/img/logo_sharing_settings_medium.webp" alt="Sharing Settings App Logo">
+
+Sharing Settings App is a DHIS2 Web Application part of [EyeSeeTea's DHIS2 Suite](https://eyeseetea.com/dhis2-apps/) that provides a quick and bulk modification of sharing settings for datasets, programs and dashboards
+
+
+## Documentation
+
+You can find a user guide [at the wiki](https://github.com/EyeSeeTea/sharing-settings-app/wiki) You can download Sharing Settings from the [DHIS2 App Hub](https://apps.dhis2.org/user/app/4045330c-5e97-4abb-ae0a-84d14d1a39b5)
+
+For more links, see the [Sharing Settings App website](https://eyeseetea.github.io/sharing-settings-app/)
+
+### About & Sponsorships
+
+User-Extended App development is sustainable thanks to the partners for which we build customized DHIS2 solutions. It has been funded by WHO and the WHO Integrated Data Platform (WIDP), where several WHO departments and units share a dedicated hosting and maintenance provided by EyeSeeTea, back some specific new features. The Long Term Agreement EyeSeeTea holds with WHO for this maintenance includes maintenance of this application, ensuring that it will always work at least with the last version of WIDP. We are passionate about both DHIS2 and open source, so giving back to the community through dedicated open-source development is and will always be part of EyeSeeTea’s commitment.
+
+You can also [support our work through a one-time contribution or becoming a regular github sponsor](https://github.com/sponsors/EyeSeeTea)
+
+## Feedback
+
+We’d like to hear your thoughts on the app in general, improvements, new features or any of the technologies being used. Just drop as a line at community@eyeseetea.com and let us know! If you prefer, you can also [create a new issue](https://github.com/EyeSeeTea/sharing-settings-app/issues) on our GitHub repository. Note that you will have to register and be logged in to GitHub to create a new issue.
+
+
 ## Setup
 
 Install dependencies:
