@@ -6,16 +6,16 @@ import { ImportResult } from "../../../entities/ImportResult";
 import { MetadataPayload } from "../../../entities/MetadataItem";
 import { SharingUpdate } from "../../../entities/SharingUpdate";
 import { ListMetadataResponse, ListOptions, MetadataRepository } from "../../../repositories/MetadataRepository";
-import { ApplySharingSettingsUseCase } from "../ApplySharingSettingsUseCase";
+import { GetMetadataWithUpdatedSharingsUseCase } from "../GetMetadataWithUpdatedSharingsUseCase";
 import { metadata } from "./ApplySharingSettingsUseCase.metadata";
 
 describe("Apply sharing settings use case", () => {
     let metadataRepository: MetadataRepository;
-    let usecase: ApplySharingSettingsUseCase;
+    let usecase: GetMetadataWithUpdatedSharingsUseCase;
 
     beforeAll(() => {
         metadataRepository = new MockMetadataRepository();
-        usecase = new ApplySharingSettingsUseCase(metadataRepository);
+        usecase = new GetMetadataWithUpdatedSharingsUseCase(metadataRepository);
     });
 
     for (const update of buildTestCases()) {
@@ -111,6 +111,14 @@ class MockMetadataRepository implements MetadataRepository {
     getDependencies(_ids: string[]): FutureData<MetadataPayload> {
         const payloads = mergePayloads(_ids.map(id => metadata[id] ?? {}));
         return Future.success(payloads);
+    }
+
+    getMetadataWithChildren(ids: string[]): FutureData<MetadataPayload[]> {
+        return Future.success(ids.map(id => metadata[id] ?? {}));
+    }
+
+    getMetadataFromIds(ids: string[]): FutureData<MetadataPayload> {
+        return Future.success(mergePayloads(ids.map(id => metadata[id] ?? {})));
     }
 
     list(_options: ListOptions): FutureData<ListMetadataResponse> {

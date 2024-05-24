@@ -1,5 +1,6 @@
 import React from "react";
 import logo from "./logo-eyeseetea.png";
+import i18n from "../../../locales";
 
 interface ShareProps {
     visible: boolean;
@@ -43,7 +44,7 @@ class Share extends React.PureComponent<ShareProps, ShareState> {
         return (
             <div>
                 <div style={styles.shareTab} onMouseEnter={this.setHover} onMouseLeave={this.unsetHover}>
-                    <button style={shareStyles} onClick={this.toggleExpanded}>
+                    <button aria-label={i18n.t("Share")} style={shareStyles} onClick={this.toggleExpanded}>
                         <i className="fa fa-share icon-xlarge" />
                     </button>
                 </div>
@@ -57,7 +58,11 @@ class Share extends React.PureComponent<ShareProps, ShareState> {
                         </p>
 
                         <p>
-                            <button style={styles.eyeseeteaShareButtons} onClick={this.openTwitter}>
+                            <button
+                                aria-label={i18n.t("Share on twitter")}
+                                style={styles.eyeseeteaShareButtons}
+                                onClick={this.openTwitter}
+                            >
                                 <i className="fa fa-twitter" style={styles.twitterIcon} />
                             </button>
                         </p>
@@ -73,7 +78,7 @@ const styles = {
         backgroundColor: "rgb(243,243,243)",
         position: "fixed" as const,
         bottom: "0px",
-        right: "100px",
+        right: "55px",
         borderRadius: "0px",
         height: "auto",
         opacity: ".85",
@@ -107,7 +112,7 @@ const styles = {
 
     shareTab: {
         bottom: "-3px",
-        right: "100px",
+        right: "55px",
         position: "fixed" as const,
         zIndex: 10002,
     },

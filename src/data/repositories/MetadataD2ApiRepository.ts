@@ -15,6 +15,10 @@ import { getD2APiFromInstance } from "../../utils/d2-api";
 import { apiToFuture } from "../../utils/futures";
 import { Instance } from "../entities/Instance";
 
+interface FullMetadataResponse extends MetadataResponse {
+    response?: MetadataResponse;
+}
+
 export class MetadataD2ApiRepository implements MetadataRepository {
     private api: D2Api;
 
@@ -43,20 +47,7 @@ export class MetadataD2ApiRepository implements MetadataRepository {
     }
 
     public getDependencies(ids: string[]): FutureData<MetadataPayload> {
-        return this.fetchMetadata(ids)
-            .flatMap(payload => {
-                const items = _(payload)
-                    .mapValues((items, key) => {
-                        if (!Array.isArray(items) || !isValidModel(key)) return undefined;
-                        return items.map(item => ({ model: key, id: item.id }));
-                    })
-                    .values()
-                    .flatten()
-                    .compact()
-                    .value();
-
-                return Future.futureMap(items, ({ model, id }) => this.fetchMetadataWithDependencies(model, id));
-            })
+        return this.getMetadataWithChildren(ids)
             .flatMap(payloads => {
                 const payload = mergePayloads(payloads);
                 const extraIds = extractExtraDependencies(payload);
@@ -65,6 +56,26 @@ export class MetadataD2ApiRepository implements MetadataRepository {
                 return this.fetchMetadata(extraIds).map(dependencies => mergePayloads([payload, dependencies]));
             })
             .map(payload => removeDefaults(payload));
+    }
+
+    public getMetadataWithChildren(ids: string[]): FutureData<MetadataPayload[]> {
+        return this.fetchMetadata(ids).flatMap(payload => {
+            const items = _(payload)
+                .mapValues((items, key) => {
+                    if (!Array.isArray(items) || !isValidModel(key)) return undefined;
+                    return items.map(item => ({ model: key, id: item.id }));
+                })
+                .values()
+                .flatten()
+                .compact()
+                .value();
+
+            return Future.futureMap(items, ({ model, id }) => this.fetchMetadataWithDependencies(model, id));
+        });
+    }
+
+    public getMetadataFromIds(ids: string[]): FutureData<MetadataPayload> {
+        return this.fetchMetadata(ids).map(payload => mergePayloads([payload]));
     }
 
     public getModelName(model: string): string {
@@ -130,8 +141,9 @@ function extractExtraDependencies(payload: MetadataPayload): string[] {
         .value();
 }
 
-function buildMetadataImportResult(response: MetadataResponse): ImportResult {
-    const { status, stats, typeReports = [] } = response;
+function buildMetadataImportResult(response: FullMetadataResponse): ImportResult {
+    const { status, stats, typeReports = [] } = response.response ?? response;
+
     const typeStats = typeReports.flatMap(({ klass, stats }) => formatStats(stats, getClassName(klass)));
 
     const messages = typeReports.flatMap(({ objectReports = [] }) =>

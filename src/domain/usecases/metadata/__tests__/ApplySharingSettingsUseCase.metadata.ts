@@ -1,5 +1,3 @@
-import _ from "lodash";
-
 export const metadata: Record<string, Record<string, any[]>> = {
     dashboard1: {
         dashboards: [

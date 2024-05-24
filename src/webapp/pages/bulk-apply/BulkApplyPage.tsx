@@ -3,12 +3,12 @@ import { ConfirmationDialog, ConfirmationDialogProps } from "@eyeseetea/d2-ui-co
 import React, { useCallback, useState } from "react";
 import { SharingUpdate } from "../../../domain/entities/SharingUpdate";
 import { PageHeader } from "../../components/page-header/PageHeader";
-import { useGoBack } from "../../hooks/useGoBack";
 import { SharingWizard } from "./SharingWizard";
+import { IconButton } from "@material-ui/core";
+import SettingsIcon from "@material-ui/icons/Settings";
+import { NavLink } from "react-router-dom";
 
 export const BulkApplyPage: React.FC = () => {
-    const goBack = useGoBack();
-
     const [dialogProps, updateDialog] = useState<ConfirmationDialogProps | null>(null);
 
     const [builder, updateBuilder] = useState<SharingUpdate>(defaultBuilder);
@@ -25,13 +25,19 @@ export const BulkApplyPage: React.FC = () => {
     }, []);
 
     return (
-        <React.Fragment>
-            <PageHeader title={i18n.t("Bulk apply")} onBackClick={goBack} />
+        <>
+            <PageHeader title={i18n.t("Bulk apply sharing settings")}>
+                <NavLink to={"/settings"}>
+                    <IconButton color="primary">
+                        <SettingsIcon fontSize="medium" />
+                    </IconButton>
+                </NavLink>
+            </PageHeader>
 
             {dialogProps && <ConfirmationDialog isOpen={true} maxWidth={"xl"} {...dialogProps} />}
 
             <SharingWizard onCancel={onCancel} builder={builder} updateBuilder={updateBuilder} />
-        </React.Fragment>
+        </>
     );
 };
 

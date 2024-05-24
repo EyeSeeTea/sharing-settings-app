@@ -1,34 +1,72 @@
-import { useSnackbar } from "@eyeseetea/d2-ui-components";
+import { ConfirmationDialog, useSnackbar } from "@eyeseetea/d2-ui-components";
 import Button from "@material-ui/core/Button";
-import React, { useCallback, useState } from "react";
-import { ImportResult } from "../../../../domain/entities/ImportResult";
+import React, { useEffect } from "react";
+import i18n from "../../../../locales";
 import { ImportSummary } from "../../../components/import-summary/ImportSummary";
-import { useAppContext } from "../../../contexts/app-context";
 import { MetadataSharingWizardStepProps } from "../SharingWizardSteps";
+import { useSummaryStep } from "./useSummaryStep";
+import { SharingSummary } from "../../../components/sharing-summary/SharingSummary";
+import { CircularProgress } from "material-ui";
+import styled from "styled-components";
 
 export const SummaryApplyStep: React.FC<MetadataSharingWizardStepProps> = ({ builder }) => {
-    const { compositionRoot } = useAppContext();
     const snackbar = useSnackbar();
 
-    const [importResult, setImportResult] = useState<ImportResult>();
+    const {
+        globalMessage,
+        importResult,
+        loading,
+        openDialog,
+        sharingSummary,
+        applySharingSettings,
+        applySharingSync,
+        closeImportSummary,
+        closePublicAccessWarningDialog,
+    } = useSummaryStep(builder);
 
-    const applySharingSync = useCallback(() => {
-        compositionRoot.metadata
-            .applySharingSettings(builder)
-            .flatMap(payload => compositionRoot.metadata.import(payload))
-            .run(
-                result => setImportResult(result),
-                error => snackbar.error(error)
-            );
-    }, [builder, compositionRoot, snackbar]);
+    useEffect(() => {
+        if (!globalMessage) return;
+
+        if (globalMessage.type === "error") {
+            snackbar.error(globalMessage.text);
+        } else if (globalMessage.type === "success") {
+            snackbar.success(globalMessage.text);
+        }
+    }, [globalMessage, snackbar]);
 
     return (
-        <React.Fragment>
-            {importResult && <ImportSummary results={[importResult]} onClose={() => setImportResult(undefined)} />}
+        <Container>
+            {importResult && <ImportSummary results={[importResult]} onClose={closeImportSummary} />}
+            {sharingSummary && <SharingSummary summary={sharingSummary} />}
+            {loading && <CircularProgress />}
 
-            <Button variant="contained" color="primary" onClick={applySharingSync}>
-                Apply Sharing Settings
-            </Button>
-        </React.Fragment>
+            <ConfirmationDialog
+                isOpen={openDialog}
+                title={i18n.t("Warning")}
+                onCancel={closePublicAccessWarningDialog}
+                onSave={applySharingSync}
+                saveText={loading ? i18n.t("Saving") : i18n.t("Continue")}
+                cancelText={i18n.t("Go back")}
+                maxWidth={"sm"}
+                fullWidth={true}
+                disableSave={loading}
+            >
+                {i18n.t("You are about to change the public access sharing setting. Would you like to continue?")}
+            </ConfirmationDialog>
+
+            <StyledButton variant="contained" color="primary" onClick={applySharingSettings} disabled={loading}>
+                {i18n.t("Apply Sharing Settings")}
+            </StyledButton>
+        </Container>
     );
 };
+
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
+
+const StyledButton = styled(Button)`
+    margin: 20px 0 0 0;
+    width: max-content;
+`;

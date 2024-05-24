@@ -1,8 +1,6 @@
-import { NamedRef } from "./Ref";
+import { Id } from "./Ref";
 
-export interface SharingSetting extends NamedRef {
-    access: string;
-}
+export type SharingSetting = { id: Id; displayName: string; access: string; name: string };
 
 export interface SharedObject {
     publicAccess: string;

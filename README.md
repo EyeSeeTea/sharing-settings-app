@@ -86,7 +86,7 @@ $ yarn build
 ### Structure
 
 -   `i18n/`: Contains literal translations (gettext format)
--   `public/`: Main app folder with a `index.html`, exposes the APP, contains the feedback-tool.
+-   `public/`: Main app folder with a `index.html`, exposes the APP.
 -   `src/pages`: Main React components.
 -   `src/domain`: Domain layer of the app (clean architecture)
 -   `src/data`: Data of the app (clean architecture)

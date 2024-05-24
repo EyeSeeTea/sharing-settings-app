@@ -9,26 +9,26 @@ import styled from "styled-components";
 export const PageHeader: React.FC<PageHeaderProps> = React.memo(props => {
     const { variant = "h5", title, onBackClick, helpText, children } = props;
     return (
-        <div>
-            {!!onBackClick && (
-                <BackButton
-                    onClick={onBackClick}
-                    color="secondary"
-                    aria-label={i18n.t("Back")}
-                    data-test={"page-header-back"}
-                >
-                    <Icon color="primary">arrow_back</Icon>
-                </BackButton>
-            )}
+        <Container>
+            <TitleContainer>
+                {!!onBackClick && (
+                    <BackButton
+                        onClick={onBackClick}
+                        color="secondary"
+                        aria-label={i18n.t("Back")}
+                        data-test={"page-header-back"}
+                    >
+                        <Icon color="primary">arrow_back</Icon>
+                    </BackButton>
+                )}
 
-            <Title variant={variant} gutterBottom data-test={"page-header-title"}>
-                {title}
-            </Title>
-
-            {helpText && <HelpButton text={helpText} />}
-
+                <Title variant={variant} gutterBottom data-test={"page-header-title"}>
+                    {title}
+                </Title>
+                {helpText && <HelpButton text={helpText} />}
+            </TitleContainer>
             {children}
-        </div>
+        </Container>
     );
 });
 
@@ -38,6 +38,16 @@ export interface PageHeaderProps {
     onBackClick?: () => void;
     helpText?: string;
 }
+
+const Container = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: 0.8rem;
+    margin-block-end: 1rem;
+`;
+
+const TitleContainer = styled.div``;
 
 const Title = styled(Typography)`
     display: inline-block;
@@ -57,10 +67,10 @@ const HelpButton: React.FC<{ text: string }> = ({ text }) => (
 );
 
 const IconButton = styled(MUIIConButton)`
-    margin-bottom: 8px;
+    margin-block-end: 0.5rem;
 `;
 
 const BackButton = styled(IconButton)`
-    padding-top: 10px;
-    margin-bottom: 5px;
+    padding-block-start: 0.625rem;
+    margin-block-end: 0.3125rem;
 `;

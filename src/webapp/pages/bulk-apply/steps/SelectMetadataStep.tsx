@@ -6,6 +6,7 @@ import { ListMetadataResponse, ListOptions } from "../../../../domain/repositori
 import Dropdown, { DropdownOption } from "../../../components/dropdown/Dropdown";
 import { useAppContext } from "../../../contexts/app-context";
 import { MetadataSharingWizardStepProps } from "../SharingWizardSteps";
+import { EllipsizedList } from "../../../components/ellipsized-list/EllipsizedList";
 
 export const SelectMetadataStep: React.FC<MetadataSharingWizardStepProps> = ({ builder, updateBuilder }) => {
     const { compositionRoot } = useAppContext();
@@ -19,9 +20,28 @@ export const SelectMetadataStep: React.FC<MetadataSharingWizardStepProps> = ({ b
         () => [
             { name: "name", text: i18n.t("Name"), sortable: true },
             { name: "id", text: i18n.t("ID"), sortable: true },
-            { name: "publicAccess", text: i18n.t("Public Access"), sortable: true },
-            { name: "userAccesses", text: i18n.t("Users"), sortable: true },
-            { name: "userGroupAccesses", text: i18n.t("User Groups"), sortable: true },
+            {
+                name: "publicAccess",
+                text: i18n.t("Public Access"),
+                sortable: true,
+                getValue: (row: MetadataItem) => row.publicAccess ?? row.sharing.public,
+            },
+            {
+                name: "userAccesses",
+                text: i18n.t("Users"),
+                sortable: true,
+                getValue: (row: MetadataItem) => (
+                    <EllipsizedList items={Object.values(row.userAccesses ?? row.sharing.users)} />
+                ),
+            },
+            {
+                name: "userGroupAccesses",
+                text: i18n.t("User Groups"),
+                sortable: true,
+                getValue: (row: MetadataItem) => (
+                    <EllipsizedList items={Object.values(row.userGroupAccesses ?? row.sharing.userGroups)} />
+                ),
+            },
         ],
         []
     );
@@ -103,4 +123,8 @@ const filterModels: DropdownOption<MetadataModel>[] = [
     { id: "dataSets", name: i18n.t("Data Sets") },
     { id: "dashboards", name: i18n.t("Dashboards") },
     { id: "programs", name: i18n.t("Programs") },
+    { id: "dataElementGroups", name: i18n.t("Data Element Group") },
+    { id: "dataElementGroupSets", name: i18n.t("Data Element Group Set") },
+    { id: "organisationUnitGroups", name: i18n.t("Organisation Unit Group") },
+    { id: "organisationUnitGroupSets", name: i18n.t("Organisation Unit Group Set") },
 ];
