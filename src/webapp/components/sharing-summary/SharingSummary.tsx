@@ -23,7 +23,7 @@ export const SharingSummary = ({ summary }: SharingSummaryProps) => {
                     {sharingWarnings.map(metadataItem => (
                         <MetadataList
                             key={metadataItem.id}
-                            title={`${metadataItem.name} (${metadataItem.id}) has different sharing settings from:`}
+                            title={`${metadataItem.name} (${metadataItem.id}) will have different sharing settings from:`}
                             metadata={metadataItem.children}
                         />
                     ))}
@@ -65,8 +65,9 @@ const Title = styled.p`
 `;
 
 const Warnings = styled.div`
-    background-color: #FFF4E5;
+    background-color: #fff4e5;
     padding: 2rem;
+    margin-bottom: 1rem;
 `;
 
 function pluralize(str: string) {

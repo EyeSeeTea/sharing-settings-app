@@ -37,19 +37,21 @@ export class GetMetadataWithUpdatedSharingsUseCase implements UseCase {
     }
 
     private updateSharingSettings(item: MetadataItem, sharings: SharedObject, replace: boolean): MetadataItem {
-        const sharing = item.sharing || {};
-        const { users, userGroups } = sharing;
         const updatedUserGroupAccesses = getUpdatedAccesses(
             replace,
             sharings.userGroupAccesses,
-            userGroups ?? item.userGroupAccesses
+            item.userGroupAccesses ?? item.sharing.userGroups
         );
-        const updatedUserAccesses = getUpdatedAccesses(replace, sharings.userAccesses, users ?? item.userAccesses);
+        const updatedUserAccesses = getUpdatedAccesses(
+            replace,
+            sharings.userAccesses,
+            item.userAccesses ?? item.sharing.users
+        );
 
         return {
             ...item,
             sharing: {
-                ...sharing,
+                ...item.sharing,
                 public: sharings.publicAccess,
                 userGroups: transformSharingSettings(updatedUserGroupAccesses),
                 users: transformSharingSettings(updatedUserAccesses),

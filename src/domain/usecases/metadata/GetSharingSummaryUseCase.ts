@@ -9,14 +9,14 @@ import { NamedRef } from "../../entities/Ref";
 export class GetSharingSummaryUseCase {
     constructor(private metadataRepository: MetadataRepository) {}
 
-    public execute(update: SharingUpdate, payload: MetadataPayload): FutureData<SharingSummary> {
+    public execute(update: SharingUpdate, updatedMetadata: MetadataPayload): FutureData<SharingSummary> {
         const { baseElements, excludedDependencies } = update;
 
-        return this.metadataRepository.getMetadataWithChildren(baseElements).flatMap(payloads => {
-            const payloadsSummary = this.getPayloadsSummary(payloads, payload, excludedDependencies);
-            const metadataWithDifferentSharing = this.getMetadataWithDifferentSharing(payloadsSummary, baseElements);
-            const sharingWarnings = this.cleanMetadataSharing(metadataWithDifferentSharing, excludedDependencies);
-            const sharingPayload = this.getSharingPayload(payload, excludedDependencies);
+        return this.metadataRepository.getMetadataWithChildren(baseElements).flatMap(currentMetadata => {
+            const payloadsSummary = this.getPayloadsSummary(currentMetadata, updatedMetadata);
+            const metadataTree = this.buildMetadataTreeFromPayload(payloadsSummary, baseElements);
+            const sharingWarnings = this.getMetadataWithDifferentSharing(metadataTree);
+            const sharingPayload = this.getSharingPayload(updatedMetadata, excludedDependencies);
 
             return this.metadataRepository.getMetadataFromIds(excludedDependencies).flatMap(excludedPayload => {
                 const excludedMetadata = this.getMetadataFromPayload(excludedPayload);
@@ -37,11 +37,7 @@ export class GetSharingSummaryUseCase {
         });
     }
 
-    private getPayloadsSummary(
-        d2Payloads: MetadataPayload[],
-        updatedPayload: MetadataPayload,
-        excludedDependencies: string[]
-    ): MetadataPayload[] {
+    private getPayloadsSummary(d2Payloads: MetadataPayload[], updatedPayload: MetadataPayload): MetadataPayload[] {
         const cleanedPayload = this.cleanPayload(updatedPayload);
 
         return d2Payloads.map(d2Payload => {
@@ -55,7 +51,7 @@ export class GetSharingSummaryUseCase {
                         const existing = mappingArray.find(mappingItem => mappingItem.id === item.id);
                         return existing ? { ...item, sharing: existing.sharing } : item;
                     })
-                    .filter(payload => !excludedDependencies.includes(payload.id) && !isDefaultElement(payload));
+                    .filter(payload => !isDefaultElement(payload));
             });
         });
     }
@@ -89,11 +85,8 @@ export class GetSharingSummaryUseCase {
         return _.pickBy(sharingPayload, value => !_.isEmpty(value));
     }
 
-    private cleanMetadataSharing(
-        metadataSharingWithChildren: SharingWarning[],
-        excludedDependencies: string[]
-    ): SharingWarning[] {
-        return metadataSharingWithChildren
+    private getMetadataWithDifferentSharing(metadataTree: SharingWarning[]): SharingWarning[] {
+        return metadataTree
             .map(item => {
                 const children = item.children.filter(child => {
                     const childSharing = {
@@ -107,11 +100,7 @@ export class GetSharingSummaryUseCase {
                         public: item.sharing.public,
                     };
 
-                    return (
-                        !_.isEqual(childSharing, parentSharing) &&
-                        !excludedDependencies.includes(child.id) &&
-                        !isDefaultElement(child)
-                    );
+                    return !_.isEqual(childSharing, parentSharing) && !isDefaultElement(child);
                 });
 
                 return {
@@ -119,10 +108,10 @@ export class GetSharingSummaryUseCase {
                     children: children,
                 };
             })
-            .filter(item => !_.isEmpty(item.children) && !excludedDependencies.includes(item.id));
+            .filter(item => !_.isEmpty(item.children));
     }
 
-    private getMetadataWithDifferentSharing(payload: MetadataPayload[], parentIds: string[]): SharingWarning[] {
+    private buildMetadataTreeFromPayload(payload: MetadataPayload[], parentIds: string[]): SharingWarning[] {
         return _(payload)
             .flatMap(payloadGroup =>
                 parentIds.map(parentId => {

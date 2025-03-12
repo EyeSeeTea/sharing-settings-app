@@ -7,9 +7,10 @@ import { MetadataPayload } from "../../../entities/MetadataItem";
 import { SharingUpdate } from "../../../entities/SharingUpdate";
 import { ListMetadataResponse, ListOptions, MetadataRepository } from "../../../repositories/MetadataRepository";
 import { GetMetadataWithUpdatedSharingsUseCase } from "../GetMetadataWithUpdatedSharingsUseCase";
-import { metadata } from "./ApplySharingSettingsUseCase.metadata";
+import { metadata } from "./GetMetadataWithUpdatedSharingsUseCase.metadata";
+import { SharingSetting } from "../../../entities/SharedObject";
 
-describe("Apply sharing settings use case", () => {
+describe("Get metadata with updated sharing settings use case", () => {
     let metadataRepository: MetadataRepository;
     let usecase: GetMetadataWithUpdatedSharingsUseCase;
 
@@ -44,15 +45,19 @@ describe("Apply sharing settings use case", () => {
             } else {
                 // If strategy is merge, check that the sharings are merged
                 for (const item of items) {
-                    const { userAccesses = [], userGroupAccesses = [] } =
+                    const { sharing = { userGroups: {}, users: {} } } =
                         metadataItems.find(({ id }) => id === item.id) ?? {};
 
-                    expect(item.userAccesses).toEqual(
-                        _.uniqBy([...sharings.userAccesses, ...userAccesses], ({ id }) => id)
+                    expect(processSharingSettings(item.userAccesses)).toEqual(
+                        processSharingSettings(
+                            _.uniqBy([...sharings.userAccesses, ..._.values(sharing.users)], ({ id }) => id)
+                        )
                     );
 
-                    expect(item.userGroupAccesses).toEqual(
-                        _.uniqBy([...sharings.userGroupAccesses, ...userGroupAccesses], ({ id }) => id)
+                    expect(processSharingSettings(item.userGroupAccesses)).toEqual(
+                        processSharingSettings(
+                            _.uniqBy([...sharings.userGroupAccesses, ..._.values(sharing.userGroups)], ({ id }) => id)
+                        )
                     );
                 }
             }
@@ -105,6 +110,17 @@ function buildTestCases(): SharingUpdate[] {
             publicAccess: item[5] === "public" ? "rw------" : "--------",
         },
     }));
+}
+
+function processSharingSettings(sharingSettings: SharingSetting[]): Omit<SharingSetting, "name">[] {
+    return _(sharingSettings)
+        .map(({ id, access, displayName, name }) => ({
+            id: id,
+            access: access,
+            displayName: displayName ?? name,
+        }))
+        .sortBy("id")
+        .value();
 }
 
 class MockMetadataRepository implements MetadataRepository {

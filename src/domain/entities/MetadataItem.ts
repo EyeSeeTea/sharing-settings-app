@@ -83,7 +83,15 @@ export type CodedRef = NamedRef & { code: string | undefined };
 export type MetadataItem = CodedRef & Sharing & SharedObject & { [key: string]: any | undefined };
 
 export function isValidModel(model: string): model is MetadataModel {
-    return ["dataSets", "programs", "dashboards"].includes(model);
+    return [
+        "dataSets",
+        "programs",
+        "dashboards",
+        "dataElementGroups",
+        "dataElementGroupSets",
+        "organisationUnitGroups",
+        "organisationUnitGroupSets",
+    ].includes(model);
 }
 
 export function isValidMetadataItem(item: any): item is MetadataItem {
