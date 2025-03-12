@@ -95,7 +95,79 @@ export class MetadataD2ApiRepository implements MetadataRepository {
     }
 
     private fetchMetadataWithDependencies(model: MetadataModel, id: string): FutureData<MetadataPayload> {
-        return apiToFuture<MetadataPayload>(this.api.get(`/${model}/${id}/metadata.json`));
+        switch (model) {
+            case "dataElementGroupSets":
+                return this.getDataElementGroupSetWithDependencies(id);
+            case "organisationUnitGroups":
+                return this.getOrgUnitGroupDependencies(id);
+            case "organisationUnitGroupSets":
+                return this.getOrgUnitGroupSetWithDependencies(id);
+            default:
+                return apiToFuture<MetadataPayload>(this.api.get(`/${model}/${id}/metadata.json`));
+        }
+    }
+
+    private getDataElementGroupSetWithDependencies(id: string): FutureData<MetadataPayload> {
+        return apiToFuture(
+            this.api.models.dataElementGroupSets.get({
+                fields: {
+                    $owner: true,
+                    dataElementGroups: { $owner: true },
+                },
+                filter: { id: { eq: id } },
+            })
+        ).flatMap(response => {
+            const d2Object = response.objects[0];
+            if (!d2Object) return Future.success({});
+
+            const { dataElementGroups, ...rest } = d2Object;
+            return Future.success({
+                dataElementGroups: dataElementGroups,
+                dataElementGroupSets: [rest],
+            });
+        });
+    }
+
+    private getOrgUnitGroupDependencies(id: string): FutureData<MetadataPayload> {
+        return apiToFuture(
+            this.api.models.organisationUnitGroups.get({
+                fields: {
+                    $owner: true,
+                    organisationUnits: { $owner: true },
+                },
+                filter: { id: { eq: id } },
+            })
+        ).flatMap(response => {
+            const d2Object = response.objects[0];
+            if (!d2Object) return Future.success({});
+
+            const { organisationUnits, ...rest } = d2Object;
+            return Future.success({
+                organisationUnits: organisationUnits,
+                organisationUnitGroups: [rest],
+            });
+        });
+    }
+
+    private getOrgUnitGroupSetWithDependencies(id: string): FutureData<MetadataPayload> {
+        return apiToFuture(
+            this.api.models.organisationUnitGroupSets.get({
+                fields: {
+                    $owner: true,
+                    organisationUnitGroups: { $owner: true },
+                },
+                filter: { id: { eq: id } },
+            })
+        ).flatMap(response => {
+            const d2Object = response.objects[0];
+            if (!d2Object) return Future.success({});
+
+            const { organisationUnitGroups, ...rest } = d2Object;
+            return Future.success({
+                organisationUnitGroups: organisationUnitGroups,
+                organisationUnitGroupSets: [rest],
+            });
+        });
     }
 }
 
